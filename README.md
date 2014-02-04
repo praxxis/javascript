@@ -112,7 +112,7 @@
     var items = [];
     ```
 
-  - When you are managing array length use direct assignment over Array#push. [jsPerf](http://jsperf.com/array-direct-assignment-vs-push/11)
+  - When you are managing array length prefer direct assignment over Array#push. [jsPerf](http://jsperf.com/array-direct-assignment-vs-push/11)
 
     ```javascript
     var hundredOdds = [],
@@ -255,7 +255,7 @@
 
     ```javascript
     // anonymous function expression
-    var anonymous = function() {
+    var anonymous = function () {
       return true;
     };
 
@@ -265,7 +265,7 @@
     };
 
     // immediately-invoked function expression (IIFE)
-    (function() {
+    (function () {
       console.log('Welcome to the Internet. Please follow me.');
     })();
     ```
@@ -371,12 +371,15 @@
 
     ```javascript
     // bad
-    var i, len, dragonball,
+    var i,
+        len,
+        dragonball,
         items = getItems(),
         goSportsTeam = true;
 
     // bad
-    var i, items = getItems(),
+    var i,
+        items = getItems(),
         dragonball,
         goSportsTeam = true,
         len;
@@ -385,14 +388,15 @@
     var items = getItems(),
         goSportsTeam = true,
         dragonball,
-        i, length;
+        i,
+        length;
     ```
 
   - Assign variables at the top of their scope. This helps avoid issues with variable declaration and assignment hoisting related issues.
 
     ```javascript
     // bad
-    function() {
+    function () {
       test();
       console.log('doing stuff..');
 
@@ -408,7 +412,7 @@
     }
 
     // good
-    function() {
+    function () {
       var name = getName();
 
       test();
@@ -424,7 +428,7 @@
     }
 
     // bad
-    function() {
+    function () {
       var name = getName();
 
       if (!arguments.length) {
@@ -435,7 +439,7 @@
     }
 
     // good
-    function() {
+    function () {
       if (!arguments.length) {
         return false;
       }
@@ -487,7 +491,7 @@
 
       anonymous(); // => TypeError anonymous is not a function
 
-      var anonymous = function() {
+      var anonymous = function () {
         console.log('anonymous function expression');
       };
     }
@@ -606,10 +610,10 @@
     }
 
     // bad
-    function() { return false; }
+    function () { return false; }
 
     // good
-    function() {
+    function () {
       return false;
     }
     ```
@@ -690,17 +694,17 @@
 
     ```javascript
     // bad
-    function() {
+    function () {
     ∙∙∙∙var name;
     }
 
     // bad
-    function() {
+    function () {
     ∙var name;
     }
 
     // good
-    function() {
+    function () {
     ∙∙var name;
     }
     ```
@@ -729,6 +733,22 @@
       breed: 'Bernese Mountain Dog'
     });
     ```
+
+  - Place 1 space after `function` for anonymous functions.
+
+    ```javascript
+    // bad
+    var func = function() {
+      console.log('test');
+    }
+
+    // good
+    var func = function () {
+      console.log('test');
+    }
+
+    ```
+
   - Place an empty newline at the end of the file.
 
     ```javascript
@@ -820,19 +840,19 @@
 
     ```javascript
     // bad
-    (function() {
+    (function () {
       var name = 'Skywalker'
       return name
     })()
 
     // good
-    (function() {
+    (function () {
       var name = 'Skywalker';
       return name;
     })();
 
     // good
-    ;(function() {
+    ;(function () {
       var name = 'Skywalker';
       return name;
     })();
@@ -862,7 +882,7 @@
     var totalScore = this.reviewScore + ' total score';
     ```
 
-  - Use `parseInt` for Numbers and always with a radix for type casting.
+  - Use `parseInt` for Numbers and always with a radix (the second argument to `parseInt`) for type casting.
   - If for whatever reason you are doing something wild and `parseInt` is your bottleneck and need to use Bitshift for [performance reasons](http://jsperf.com/coercion-vs-casting/3), leave a comment explaining why and what you're doing.
 
     ```javascript
@@ -929,21 +949,20 @@
     }
     ```
 
-  - Use `lowercase_separated_by_underscores` when naming objects, functions, and instances
+  - Use camelCase when naming objects, functions, and instances
 
     ```javascript
     // bad
     var OBJEcttsssss = {};
-    var thisIsMyObject = {};
-    var this-is-my-object = {};
+    var this_is_my_object = {};
     function c() {};
     var u = new user({
       name: 'Bob Parr'
     });
 
     // good
-    var this_is_my_object = {};
-    function this_is_my_function() {};
+    var thisIsMyObject = {};
+    function thisIsMyFunction() {};
     var user = new User({
       name: 'Bob Parr'
     });
@@ -982,35 +1001,42 @@
     this._firstName = 'Panda';
     ```
 
-  - When saving a reference to `this` use `self`.
+  - Prefer using `Function.bind` to give a function context. When saving a reference to `this` use `self`.
 
     ```javascript
     // bad
-    function() {
+    function () {
       var _this = this;
-      return function() {
+      return function () {
         console.log(_this);
       };
     }
 
     // bad
-    function() {
+    function () {
       var that = this;
-      return function() {
+      return function () {
         console.log(that);
       };
     }
 
-    // good
-    function() {
+    // ok
+    function () {
       var self = this;
-      return function() {
+      return function () {
         console.log(self);
       };
     }
+
+    // best
+    function () {
+      return function () {
+        console.log(self);
+      }.bind(this);
+    }
     ```
 
-  - Name your functions. This is helpful for stack traces.
+  - Try to name your functions. This is helpful for stack traces.
 
     ```javascript
     // bad
@@ -1025,61 +1051,6 @@
     ```
 
     **[[⬆]](#TOC)**
-
-
-## <a name='accessors'>Accessors</a>
-
-  - Accessor functions for properties are not required
-  - If you do make accessor functions use getVal() and setVal('hello')
-
-    ```javascript
-    // bad
-    dragon.age();
-
-    // good
-    dragon.getAge();
-
-    // bad
-    dragon.age(25);
-
-    // good
-    dragon.setAge(25);
-    ```
-
-  - If the property is a boolean, use isVal() or hasVal()
-
-    ```javascript
-    // bad
-    if (!dragon.age()) {
-      return false;
-    }
-
-    // good
-    if (!dragon.hasAge()) {
-      return false;
-    }
-    ```
-
-  - It's okay to create get() and set() functions, but be consistent.
-
-    ```javascript
-    function Jedi(options) {
-      options || (options = {});
-      var lightsaber = options.lightsaber || 'blue';
-      this.set('lightsaber', lightsaber);
-    }
-
-    Jedi.prototype.set = function(key, val) {
-      this[key] = val;
-    };
-
-    Jedi.prototype.get = function(key) {
-      return this[key];
-    };
-    ```
-
-    **[[⬆]](#TOC)**
-
 
 ## <a name='constructors'>Constructors</a>
 
@@ -1115,7 +1086,7 @@
 
     ```javascript
     // bad
-    Jedi.prototype.jump = function() {
+    Jedi.prototype.jump = function () {
       this.jumping = true;
       return true;
     };
@@ -1129,7 +1100,7 @@
     luke.setHeight(20) // => undefined
 
     // good
-    Jedi.prototype.jump = function() {
+    Jedi.prototype.jump = function () {
       this.jumping = true;
       return this;
     };
@@ -1242,7 +1213,7 @@
   - **Yup.**
 
     ```javascript
-    function() {
+    function () {
       return true;
     }
     ```
